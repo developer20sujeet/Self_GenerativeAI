@@ -19,7 +19,7 @@ windowAuthentication_trusted_connection = 'yes'
 
 def setup_openai_api():
     # Set your OpenAI API Key
-    os.environ['OPENAI_API_KEY'] = ""
+    os.environ['OPENAI_API_KEY'] = "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"
 
 def setup_database_connection():    
 
