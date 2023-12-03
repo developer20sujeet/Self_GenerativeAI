@@ -1,0 +1,83 @@
+import pyodbc
+from langchain.chat_models import ChatOpenAI
+
+# Replace these with your actual database details and OpenAI API key
+DATABASE_SERVER = 'SKUMAR'
+DATABASE_NAME = 'Northwind'
+# DATABASE_USERNAME = 'your_username'
+# DATABASE_PASSWORD = 'your_password'
+
+DRIVER = '{ODBC Driver 17 for SQL Server}'
+windowAuthentication_trusted_connection = 'yes'
+
+OPENAI_API_KEY = 'sk'
+
+# Initialize the ChatOpenAI model with OpenAI API key
+chat_model = ChatOpenAI(model="gpt-3.5-turbo", api_key=OPENAI_API_KEY)
+
+# Initialize the chat history
+chat_history = []
+
+
+def get_database_connection():
+    """
+    Establishes a connection to the Microsoft SQL database.
+    """
+    # connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={DATABASE_SERVER};DATABASE={DATABASE_NAME};UID={DATABASE_USERNAME};PWD={DATABASE_PASSWORD}'
+    
+    cconnection_string = f'DRIVER={DRIVER};SERVER={DATABASE_SERVER};DATABASE={DATABASE_NAME};Trusted_Connection={windowAuthentication_trusted_connection}'  
+    return pyodbc.connect(cconnection_string)
+
+def natural_language_to_sql(natural_language_query):
+    """
+    Converts a natural language query to an SQL query using ChatOpenAI.
+    """
+    global chat_history
+    # Combine the chat history and the new query into a single string
+    prompt = '\n'.join([f"User: {msg['content']}\nAssistant: {msg['response']}" for msg in chat_history])
+    prompt += f"\nUser: {natural_language_query}\nAssistant:"
+
+    try:
+        # Use a generic interface, assuming the model requires a prompt and max_tokens
+        response = chat_model(prompt, max_tokens=100)  # Adjusted call
+        sql_query = response.get('text', '').strip()
+
+        # Update chat history with the new query and response
+        chat_history.append({"content": natural_language_query, "response": sql_query})
+    except Exception as e:
+        raise NotImplementedError(f"An error occurred in generating response: {e}")
+    
+    return sql_query
+
+
+
+def execute_sql_query(sql_query):
+    """
+    Executes an SQL query and returns the results.
+    """
+    with get_database_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(sql_query)
+        return cursor.fetchall()
+
+def query_database(natural_language_query):
+    """
+    Main function to handle natural language query, convert it to SQL, execute and return results.
+    """
+    sql_query = natural_language_to_sql(natural_language_query)
+    results = execute_sql_query(sql_query)
+    return results
+
+if __name__ == "__main__":
+    while True:
+        user_input = input("Enter your natural language query (or type 'exit' to quit): ")
+        if user_input.lower() == 'exit':
+            break
+        try:
+            sql_query = natural_language_to_sql(user_input)
+            print(f"SQL Query: {sql_query}")
+            query_results = execute_sql_query(sql_query)
+            for row in query_results:
+                print(row)
+        except Exception as e:
+            print(f"An error occurred: {e}")

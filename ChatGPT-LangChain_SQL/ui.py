@@ -1,7 +1,7 @@
 
 import os
 
-os.environ['OPENAI_API_KEY'] = "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"
+os.environ['OPENAI_API_KEY'] = ""
 import sqlite3
 import tkinter as tk
 import tkinter.ttk as ttk
