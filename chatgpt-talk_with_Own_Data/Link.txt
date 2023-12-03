@@ -1,0 +1,10 @@
+
+1. Designing LLM based Apps using LangChain and Llama Index -WalkingTree Technologies
+
+    https://www.youtube.com/watch?v=ojQ3hpG_4J8
+
+2.Needed to install 
+--pip install "unstructured[pdf]"
+--pip install "unstructured"
+--pip install chromadb
+--pip install tiktoken
