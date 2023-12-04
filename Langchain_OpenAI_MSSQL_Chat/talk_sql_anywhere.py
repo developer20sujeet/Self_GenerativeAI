@@ -7,13 +7,14 @@ from langchain.agents.agent_toolkits import SQLDatabaseToolkit
 from langchain.sql_database import SQLDatabase
 from langchain.llms.openai import OpenAI
 from langchain.agents import AgentExecutor
+#import sqlany_dialect  # The custom dialect we defined
 
 # Database connection details for Microsoft SQL Server
-DATABASE_SERVER = 'SKUMAR'
-DATABASE_NAME = 'Northwind'
-# DATABASE_USERNAME = 'your_username'
-# DATABASE_PASSWORD = 'your_password'
-DRIVER = '{ODBC Driver 18 for SQL Server}'
+DATABASE_SERVER = 'sqldemo'
+DATABASE_NAME = 'demo'
+DATABASE_USERNAME = 'dba'
+DATABASE_PASSWORD = 'sql'
+DRIVER = '{SQL Anywhere 17}'
 windowAuthentication_trusted_connection = 'yes'
 
 
@@ -24,7 +25,7 @@ def setup_openai_api():
 def setup_database_connection():    
 
     # Establish a connection to the Microsoft SQL database
-    conn_string = f'DRIVER={DRIVER};SERVER={DATABASE_SERVER};DATABASE={DATABASE_NAME};Trusted_Connection={windowAuthentication_trusted_connection};TrustServerCertificate=yes'  
+    conn_string = f'DRIVER={DRIVER};SERVER={DATABASE_SERVER};DATABASE={DATABASE_NAME};UID={DATABASE_USERNAME};PWD={DATABASE_PASSWORD}'  
     conn = pyodbc.connect(conn_string)
 
     return conn
@@ -37,9 +38,15 @@ def create_agent_executor():
     # and how SQLDatabase.from_uri() interprets it.
 
     # URI for Windows Authentication
-    conn_uri = f"mssql+pyodbc://{DATABASE_SERVER}/{DATABASE_NAME}?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes&Trusted_Connection=yes"
-    # Establishing a connection to the Microsoft SQL database using Windows Authentication
+    # conn_uri = f"mssql+pyodbc://{DATABASE_SERVER}/{DATABASE_NAME}?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes&Trusted_Connection=yes"
+    
+
+    conn_uri = f"sqlanywhere+pyodbc://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{DATABASE_SERVER}/{DATABASE_NAME}?driver=SQL+Anywhere+17"  
     db = SQLDatabase.from_uri(conn_uri)
+
+
+    # engine = create_engine('sqlanywhere+pyodbc://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{DATABASE_SERVER}/{DATABASE_NAME}')
+    # db = SQLDatabase.from_uri(engine)
 
     # Instantiate your language model here
     llm = OpenAI(api_key=os.environ['OPENAI_API_KEY'], temperature=0)
