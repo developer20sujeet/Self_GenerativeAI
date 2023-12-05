@@ -1,0 +1,4 @@
+File "C:\Users\DELL\AppData\Local\Programs\Python\Python39\Lib\site-packages\sqlalchemy_sqlany\base.py", line 798, in get_table_names
+    tables = connection.execute(TABLE_SQL, schema_name=schema)
+
+    

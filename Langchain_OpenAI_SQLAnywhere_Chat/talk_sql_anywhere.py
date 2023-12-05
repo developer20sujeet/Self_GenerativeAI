@@ -14,8 +14,12 @@ DATABASE_SERVER = 'sqldemo'
 DATABASE_NAME = 'demo'
 DATABASE_USERNAME = 'dba'
 DATABASE_PASSWORD = 'sql'
-DRIVER = '{SQL Anywhere 17}'
-windowAuthentication_trusted_connection = 'yes'
+DRIVER_NAME = '{SQL Anywhere 17}'
+PORT=2638
+DATABASE_HOST = 'localhost'
+
+# Define your DSN name
+DSN_NAME = 'sql2023'
 
 
 def setup_openai_api():
@@ -25,7 +29,10 @@ def setup_openai_api():
 def setup_database_connection():    
 
     # Establish a connection to the Microsoft SQL database
-    conn_string = f'DRIVER={DRIVER};SERVER={DATABASE_SERVER};DATABASE={DATABASE_NAME};UID={DATABASE_USERNAME};PWD={DATABASE_PASSWORD}'  
+    #conn_string = f'DRIVER={DRIVER};SERVER={DATABASE_SERVER};DATABASE={DATABASE_NAME};UID={DATABASE_USERNAME};PWD={DATABASE_PASSWORD}'  
+
+    conn_string = f'DSN={DSN_NAME}'
+
     conn = pyodbc.connect(conn_string)
 
     return conn
@@ -41,7 +48,10 @@ def create_agent_executor():
     # conn_uri = f"mssql+pyodbc://{DATABASE_SERVER}/{DATABASE_NAME}?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes&Trusted_Connection=yes"
     
 
-    conn_uri = f"sqlanywhere+pyodbc://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{DATABASE_SERVER}/{DATABASE_NAME}?driver=SQL+Anywhere+17"  
+    #conn_string = f"sqlalchemy_sqlany://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{DATABASE_HOST}/{DATABASE_NAME}"  
+ # Update the connection URI to use the DSN
+    conn_uri = f"sqlalchemy_sqlany:///?dsn={DSN_NAME}"
+
     db = SQLDatabase.from_uri(conn_uri)
 
 
@@ -67,6 +77,7 @@ def setup_ui(agent_executor):
     # Create the UI window
     root = tk.Tk()
     root.title("Chat with your Database")
+
 
     # Text entry widget
     entry = ttk.Entry(root, font=("Arial", 14))
@@ -100,3 +111,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
