@@ -28,14 +28,68 @@
 #     print(row)
 
 #=======================================================
-import pyodbc
+# import pyodbc
 
-DSN_NAME = 'sql2023'  # Replace with your actual User DSN name
+# DSN_NAME = 'sql2023'  # Replace with your actual User DSN name
 
-try:
-    conn = pyodbc.connect(f'DSN={DSN_NAME}')
-    print("Connected successfully")
-    # Perform any test query
-    conn.close()
-except Exception as e:
-    print("Error occurred:", e)
+# try:
+#     conn = pyodbc.connect(f'DSN={DSN_NAME}')
+#     print("Connected successfully")
+#     # Perform any test query
+#     conn.close()
+# except Exception as e:
+#     print("Error occurred:", e)
+
+#==================================
+# import sys
+
+# for path in sys.path:
+#     if "sqlalchemy_sqlany" in path:
+#         print(f"Found sqlalchemy_sqlany in: {path}")
+
+# import sqlalchemy
+
+# #print("sqlalchemy imported successfully!")
+
+# import sqlalchemy_sqlany
+
+# # Check if sqlalchemy_sqlany dialect is registered with SQLAlchemy
+# print(sqlalchemy.dialects.registry.available())
+
+
+
+# from sqlalchemy import create_engine
+
+# try:
+#     # Replace 'your_dialect' with the name of the dialect you're checking
+#     engine = create_engine('sqlalchemy_sqlany://')
+#     print("Dialect is registered.")
+# except ImportError:
+#     print("Dialect is not registered.")
+
+
+# from sqlalchemy.dialects import registry
+
+# # List all registered dialect names
+# print(registry.keys())
+
+# # Check if a specific dialect is registered
+# if 'your_dialect' in registry:
+#     print("Dialect is registered.")
+# else:
+#     print("Dialect is not registered.")
+
+
+
+
+
+
+
+
+
+from sqlalchemy.dialects import registry
+registry.register('sqlalchemy_sqlany', 'sqlalchemy_sqlany.base', 'SQLAnyDialect')
+
+from sqlalchemy.testing import runner
+
+runner.main()

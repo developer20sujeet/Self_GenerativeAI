@@ -1,4 +1,14 @@
 File "C:\Users\DELL\AppData\Local\Programs\Python\Python39\Lib\site-packages\sqlalchemy_sqlany\base.py", line 798, in get_table_names
     tables = connection.execute(TABLE_SQL, schema_name=schema)
 
-    
+
+
+C:\Users\DELL\AppData\Local\Programs\Python\Python39\Lib\site-packages\sqlalchemy_sqlany\base.py call 
+C:\Users\DELL\AppData\Local\Programs\Python\Python39\Lib\site-packages\sqlalchemy\engine\base.py
+
+
+class sqlalchemy_sqlany\base.py call sqlalchemy\engine\base.py 
+ and sqlalchemy\engine\base.py  has execut() method 
+
+ so issue coming class sqlalchemy_sqlany\base.py call sqlalchemy\engine\base.py so sqlalchemy_sqlany need schema to function 
+ but sqlalchemy does not have that parameter so sqlalchemy not supporting dialet sqlalchemy_anywhere
